@@ -296,7 +296,7 @@ def order_report_handler(message):
         df_trade_report.loc[df_trade_report['orderId'] == clOrdId] = [clOrdId, ticker, tipo, precio, cantidad, status, cant_acumulada,
                  cant_restante, precio_promedio, time.strftime('%d/%m/%Y %H:%M:%S', time.gmtime(hora / 1000 - 10800.)),
                  comentario, cuenta, wsClOrdId]
-        print(f"Se actualizó el registro con orderId {clOrdId}.")
+        #print(f"Se actualizó el registro con orderId {clOrdId}.")
     else:
         # Append the new order data to df_trade_report
         new_order_data = {
@@ -315,7 +315,10 @@ def order_report_handler(message):
             'wsClOrdId': wsClOrdId
         }
         df_trade_report = df_trade_report.append(new_order_data, ignore_index=True)
-        print(f"Se agregó un nuevo registro con orderId {clOrdId}.")
+        #print(f"Se agregó un nuevo registro con orderId {clOrdId}.")
+        
+        #BORRO LAS ORDENS CANCELADAS QUE NO FUERON OPERADO PARCIAL
+        df_trade_report = df_trade_report[(df_trade_report['Status'] != 'CANCELLED') | (df_trade_report['Cant Acum'] != 0)]
 
 
 def error_handler(message):
